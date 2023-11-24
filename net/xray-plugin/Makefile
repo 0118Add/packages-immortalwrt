@@ -5,12 +5,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=xray-plugin
-PKG_VERSION:=1.6.3
-PKG_RELEASE:=$(AUTORELEASE)
+PKG_VERSION:=1.8.6
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/teddysun/xray-plugin/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=0e4eb348ad66d04998e615ebcf987f93f916dfd2ceeee70451d40183664de0dc
+PKG_HASH:=9df7e65fe1ae6a001240d304db3aeaa3d4b1e3a2f4db00aa498bbe1e2bb18729
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
@@ -19,11 +19,12 @@ PKG_MAINTAINER:=Tianling Shen <cnsztl@immortalwrt.org>
 PKG_BUILD_DEPENDS:=golang/host
 PKG_BUILD_PARALLEL:=1
 PKG_USE_MIPS16:=0
+PKG_BUILD_FLAGS:=no-mips16
 
 GO_PKG:=github.com/teddysun/xray-plugin
 
 include $(INCLUDE_DIR)/package.mk
-include ../../lang/golang/golang-package.mk
+include $(TOPDIR)/feeds/packages/lang/golang/golang-package.mk
 
 define Package/xray-plugin
   SECTION:=net
@@ -32,6 +33,11 @@ define Package/xray-plugin
   TITLE:=SIP003 plugin for Shadowsocks, based on Xray
   URL:=https://github.com/teddysun/xray-plugin
   DEPENDS:=$(GO_ARCH_DEPENDS) +ca-bundle
+endef
+
+define Package/xray-plugin/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(GO_PKG_BUILD_BIN_DIR)/xray-plugin $(1)/usr/bin/xray-plugin
 endef
 
 $(eval $(call GoBinPackage,xray-plugin))
